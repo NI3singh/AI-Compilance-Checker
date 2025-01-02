@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, HTTPException
-from services.manager import FileIngestionManager
+from Managers.ingestion_manager import FileIngestionManager
 
 # Initialize router
 router = APIRouter()
@@ -7,6 +7,15 @@ router = APIRouter()
 # File upload endpoint
 @router.post("/upload/")
 async def upload_file(file: UploadFile):
+    """
+    Endpoint to upload a PDF file.
+
+    Args:
+        file (UploadFile): The uploaded file object.
+
+    Returns:
+        dict: A message and the file path where the file is saved.
+    """
     # Check if file is a PDF
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
