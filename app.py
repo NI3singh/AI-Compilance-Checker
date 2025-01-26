@@ -1,5 +1,5 @@
 import streamlit as st
-from src.services.ingestion_manager import FileIngestionManager
+from src.Managers.ingestion_manager import FileIngestionManager
 from src.utils.similarity_search import similarity_search
 
 # Initialize FileIngestionManager
