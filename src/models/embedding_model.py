@@ -1,23 +1,22 @@
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
-import faiss as FAISS
+from openai import OpenAI
+from typing import List, Dict
+import os
+from dotenv import load_dotenv
 
-def create_embeddings(splits):
-    """
-    Create embeddings for the document chunks.
+load_dotenv()
 
-    Args:
-        splits (list): List of document chunks.
+client = OpenAI()
 
-    Returns:
-        FAISS: FAISS vector store with embeddings.
-    """
-    model_name = "BAAI/bge-small-en"
-    model_kwargs = {"device": "cpu"}
-    encode_kwargs = {"normalize_embeddings": True}
+def get_embedding(text: str, model: str = "text-embedding-3-small") -> List[float]:
     
-    hf_embeddings = HuggingFaceBgeEmbeddings(
-        model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
-    )
+    return client.embeddings.create(input=[text], model=model).data[0].embedding
 
-    vectorstore = FAISS.from_documents(splits, hf_embeddings)
-    return vectorstore
+def generate_embeddings_for_dataset(dataset: List[Dict]) -> List[Dict]:
+    
+    for row in dataset:
+        # Generate embeddings for the Question, Answer, and Document Name
+        row["question_embedding"] = get_embedding(row["Question"])
+        row["answer_embedding"] = get_embedding(row["Answer"])
+        row["document_name_embedding"] = get_embedding(row["Document Name"])
+    
+    return dataset

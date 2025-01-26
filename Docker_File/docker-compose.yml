@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: compliance_checker 
+      POSTGRES_USER: nitin
+      POSTGRES_PASSWORD: nitin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
